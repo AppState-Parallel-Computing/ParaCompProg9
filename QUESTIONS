@@ -1,0 +1,25 @@
+You should get your code working before answering these questions.
+Make sure your code is compiled with the cuda flags that enable optimizations.
+
+1) If you run the knapsack program with a relatively small number of
+objects and capacity (for example -c 10, -n 10), you'll see that the GPU
+version (both the optimized and the naive) is slower than the CPU version.
+Why?
+
+
+2) Run the naive knapsack several times with -c 14 and -n -14 and try
+out various block size (128, 256, 512, 1024).
+What trend do you see in the reported speedups?  Explain why that trend
+occurs.
+
+
+3) Explain why this implementation is limited to one block.
+
+
+
+4) Compare the following two configurations using the optimized kernel:
+-c 20 -n 9
+-c 9 -n 20
+Why is the speedup so much higher for the first configuration (-c 20 -n 9)?
+
+
