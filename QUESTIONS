@@ -14,6 +14,7 @@ occurs.
 
 
 3) Explain why this implementation is limited to one block.
+Hint: the answer has to do with synchronization.
 
 
 

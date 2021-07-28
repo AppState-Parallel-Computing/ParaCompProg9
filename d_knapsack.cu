@@ -50,7 +50,7 @@ float d_knapsack(int * result, int * weights, int * values, int numObjs,
     //Launch the appropriate kernel
     if (which == NAIVE)
     {
-        //Allocate space in GPU memory for best matrix
+        //Allocate space in GPU memory for best array
         int bestSz = (numObjs + 1) * (capacity + 1);
         cudaMalloc((void **)&d_best, sizeof(int) * bestSz);             CUERR
         //set the best matrix to 0
@@ -68,6 +68,12 @@ float d_knapsack(int * result, int * weights, int * values, int numObjs,
     {
         //TO DO
         //Provide the code that is missing to execute the optimized kernel
+        //1) Allocate space for the best array. 
+        //   Note best array size is not the same naive best array.
+        //2) Set best array elements to 0
+        //3) Define block and grid
+        //4) Launch the kernel
+        //5) Copy best matrix into CPU result array
 
     }
     //free dynamically  allocated memory
@@ -97,19 +103,19 @@ void d_knapsackNaiveKernel(int * best, int * weights, int * values,
 {
     //TO DO
 
-    //You should base this implementation on the CPU version in h_knapsack.cu, 
-    //but the best array needs to be allocated before the kernel launch.
-
-    //All threads of a block will cooperate in producing one row (i) of results.
-    //Block synchronization is needed so the threads in a block won't continue
-    //onto next row until all threads are finished with the current row.
-
-    //The elements of a row are distributed among the threads in a block in
-    //a cyclic manner.
-
-    //The thread identifier is used by the thread to choose the first element
-    //within the row that it is responsible for.  For example, for i equal 
-    //to 0, thread 0 will write to best[0], best[blockDim.x], best[2*blockDim.x], etc.
+    //You should base this implementation on the CPU version in h_knapsack.cu. 
+    //1) Do not allocate and initalize the best array here. That was done before
+    //   the kernel launch.
+    //2) Each thread will loop through the number of rows (just like CPU version)
+    //3) In the inner, loop cyclic partitioning will be used to divide up the 
+    //   the row elements (the columns) among the threads.  For example, 
+    //   thread 0 will calculate the 0th element, the blockDim.x element, 
+    //   the 2*blockDim.x element, etc in the ith row of best. 
+    //   (Note that best is a 1D array holding 2D data.)
+    //   Thus, all threads of a block will cooperate in producing one row (i) 
+    //   of results.
+    //4) Block synchronization is needed so the threads in a block won't continue
+    //   onto next row until all threads are finished with the current row.
 
 }
 
@@ -129,11 +135,15 @@ void d_knapsackOptKernel(int * best, int * weights, int * values, int numObjs,
 {
     //TO DO
 
-    //For this one, start with the naive kernel code and improve it.
-    //Specifically, reduce the number of accesses to global memory where you can.
-    //Instead those accesses should access registers or shared memory.
-    //This requires just a very simple modification of the code.
-
-    //Second, use less global memory: O(capacity) instead of O(capacity * numObjs)
+    //For this one, you'll start with the naive kernel code and improve it.
+    //1) Note all of the accesses to weights[i-1] and values[i-1] that occur in
+    //   in the inner most loop.  Those are all accesses to global memory.  You want
+    //   to change those so that they are either accesses to the faster
+    //   shared memory or to registers. (This is a really easy fix and one that
+    //   programmers should always do whether for CPU code or GPU code.)
+    //2) Use less global memory for the best array.  Note that the last row
+    //   of the best array is what is copied into result. And each row is computed
+    //   using the values in the previous row. Thus, this code can
+    //   be implemented with just two rows in the best array.
 }      
 
