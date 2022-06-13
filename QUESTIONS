@@ -2,7 +2,7 @@ You should get your code working before answering these questions.
 Make sure your code is compiled with the cuda flags that enable optimizations.
 
 1) If you run the knapsack program with a relatively small number of
-objects and capacity (for example -c 10, -n 10), you'll see that the GPU
+objects and capacity, you'll see that the GPU
 version (both the optimized and the naive) is slower than the CPU version.
 Why?
 
